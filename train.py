@@ -1,9 +1,9 @@
 
 
 
-import model
-import geometry as gm
-from sdfsequencer import SDFSequence
+import neuralImplicit.model
+import neuralImplicit.geometry as gm
+from neuralImplicit.sdfsequencer import SDFSequence
 
 #HACK: igl and tensorflow link against OpenMP on osx. This is a workaround to allow it...
 import os
