@@ -144,22 +144,22 @@ def singleModelTrain(
 
   if showVis:
 
-    if config.reconstructionRes > 0:
-      # predict against grid
-      rGrid = cubeMarcher.createGrid(config.reconstructionRes)
-      S = sdfModel.predict(rGrid)
+    #if config.reconstructionRes > 0:
+    # predict against grid
+    #  rGrid = cubeMarcher.createGrid(config.reconstructionRes)
+    #  S = sdfModel.predict(rGrid)
 
     # plot results
     sdfModel.plotTrainResults()
 
-    cubeMarcher.march(rGrid,S)
-    marchedMesh = cubeMarcher.getMesh() 
-    marchedMesh.show()
+    #cubeMarcher.march(rGrid,S)
+    #marchedMesh = cubeMarcher.getMesh() 
+    #marchedMesh.show()
 
   if (not (outputDir == None)):
     sdfModel.save()
     if showVis:
-      marchedMesh.save(os.path.join(outputDir,config.name + '.obj'))
+      #marchedMesh.save(os.path.join(outputDir,config.name + '.obj'))
       sdfModel.plotTrainResults(show = False, save = True)
 
 def parseArgs():
@@ -168,7 +168,7 @@ def parseArgs():
   parser.add_argument('inputPath', help='path to input mesh/ folder of meshes', default=None)
   parser.add_argument('--queryPath', help='path to h5 dataset containining queries', default=None)
   parser.add_argument('--reuseEpoch',type=int, default=True,help='option to reuse first epoch, or regenerate every time!')
-  parser.add_argument('--outputDir', help='directory to save model and mesh artifacts', default='../results/')
+  parser.add_argument('--outputDir', help='directory to save model and mesh artifacts', default='results/')
   parser.add_argument('--validationRes', type=int, help='resolution of validation grid', default= 32)
   parser.add_argument('--reconstructionRes', type=int, help='resolution of output sdf grid', default= 128)
   parser.add_argument('--showVis', type=int, default=True, help='0 to disable vis for headless')
