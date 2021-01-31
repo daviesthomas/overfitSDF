@@ -7,6 +7,9 @@ import tensorflow as tf
 import os
 import numpy as np
 
+from skimage.draw import ellipsoid
+from skimage import measure
+
 #HACK: igl and tensorflow link against OpenMP on osx. This is a workaround to allow it...
 os.environ['KMP_DUPLICATE_LIB_OK'] = "1"
 
@@ -16,7 +19,7 @@ def loadModel(modelPath, neuralKey=''):
     # LOAD THE MODEL
     #load serialized model
     if neuralKey == '':
-        jsonFile = open(modelPath+'.json', 'r')
+        jsonFile = open(modelPath.replace('.h5','.json'), 'r')
     else:
         jsonFile = open(neuralKey, 'r')
 
@@ -46,18 +49,21 @@ def createAx(idx):
     return subplot
 
 def plotSamples(ax, pts, S, vmin = -1, is2d = False):
-    
-
     #just show points inside the shape!
+    i= np.argmin(S)
+    print(pts[i])
+
     mask = S < 0.0
     mask = np.squeeze(mask)
-    print(mask)
-    fS = S[mask]
+
+    fS = np.squeeze(S[mask])
     fPts = pts[mask]
-    print(fPts.shape)
+
+    
+    
     x,y,z = np.hsplit(fPts,3)
 
-    ax.scatter(x,y,z,c=fS, marker='.',cmap='coolwarm', norm=None, vmin=vmin, vmax=1)
+    ax.scatter(xs=x,ys=y,zs=z,c=fS, marker='.',cmap='coolwarm', norm=None, vmin=vmin, vmax=1)
 
 if __name__ == "__main__":
     # this should handle folders of meshes, parallelizing the meshing to avail cores
