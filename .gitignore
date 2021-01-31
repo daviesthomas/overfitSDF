@@ -1,0 +1,11 @@
+
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/overfitSDF.iml
+.idea/vcs.xml
+*.pyc
+neuralImplicit/__pycache__/model.cpython-37.pyc
+neuralImplicit/__pycache__/geometry.cpython-37.pyc
+neuralImplicit/__pycache__/__init__.cpython-37.pyc
