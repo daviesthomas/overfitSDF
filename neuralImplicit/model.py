@@ -22,27 +22,29 @@ class Config(object):
     numLayers = 8
     activation = 'elu'
     workers = 4
-    saveDir = ''
+    saveDir = 'results'
     name = 'sdfModel'
     lossType = 'l1' # l1,l2,clamp,min
     clampValue = 0.1
     optimizer = 'adam'
 
+    epochLength = 500000
+    validationRes = 0
+
     # Fourier Features Experiment Toggle
     useFourierFeatures = False
-    maxFreq = 10
+    maxFreq = 0 #10
 
     #loggin options (for review !)
     logTensorboard = True
     logHparam = False
     useMultiProcessing = False
+    epochs = 100
+    saveWeightsEveryEpoch=False
 
     #learning rate specific params
     learningRate = 0.0005
 
-    #frame param
-    useFrames = False
-    saveWeightsEveryEpoch = False
 
 class SDFModel:
   optimizer = None

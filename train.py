@@ -1,9 +1,10 @@
 
 
 
-import neuralImplicit.model
+import neuralImplicit.model as model
 import neuralImplicit.geometry as gm
 from neuralImplicit.sdfsequencer import SDFSequence
+
 
 #HACK: igl and tensorflow link against OpenMP on osx. This is a workaround to allow it...
 import os
@@ -79,14 +80,17 @@ def singleModelTrain(
     elif samplingMethod['type'] == 'Uniform':
       pointSampler = gm.PointSampler(mesh, ratio = 1.0)
     elif samplingMethod['type'] == 'Importance':
-      pointSampler = gm.ImportanceSampler(mesh, int(config.epochLength/samplingMethod['ratio']), samplingMethod['weight'])
+      pointSampler = gm.ImportanceSampler(mesh, int(config.epochLength*8), samplingMethod['weight'])
+    elif samplingMethod['type'] == 'Vertice':
+      pointSampler = gm.PointSampler(mesh, ratio=samplingMethod['ratio'], std=samplingMethod['std'], verticeSampling=True)
     else:
       raise("uhhhh")
 
     # create data sequences
     validationGrid = cubeMarcher.createGrid(config.validationRes) if config.validationRes > 0 else None
-    print(config.maxFreq)
+    print("Sampling mesh to generate training sequence...")
     sdfTrain, sdfEval = createSequences(sdf, validationGrid, pointSampler, config.batchSize, config.epochLength, fourierFeatureMaxFreq=config.maxFreq)
+    print("Done!")
 
   elif (not precomputedFn is None) :
     # precomputed!
@@ -180,7 +184,7 @@ def parseArgs():
   parser.add_argument('--activation', default='relu', type=str)
   parser.add_argument('--firstLayerHiddenSize', type=int, default=32)
   parser.add_argument('--numLayers', type=int, default=8)
-  parser.add_argument('--samplingMethod', type=str, default='Uniform')
+  parser.add_argument('--samplingMethod', type=str, default='Importance')
   parser.add_argument('--importanceWeight', type=int, default=60)
   parser.add_argument('--suffix', type=str, default='')
   parser.add_argument('--gpu', type=int, default=0)
@@ -253,6 +257,12 @@ if __name__ == "__main__":
   elif (args.samplingMethod == 'Uniform'):
     config.samplingMethod = {
       'type': 'Uniform'
+    }
+  elif (args.samplingMethod == 'Vertice'):
+    config.samplingMethod = {
+      'std': 0.01,
+      'ratio': 0.1,
+      'type': 'Vertice'
     }
   else:
     print("INVALID SAMPLING METHOD EXITING")
