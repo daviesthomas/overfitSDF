@@ -16,7 +16,6 @@ import matplotlib.cm as cm
 
 import igl
 import meshplot 
-import marching_cubes
 
 #constants used for sampling box AND miniball normalization
 BOUNDING_SPHERE_RADIUS = 0.9
