@@ -12,7 +12,7 @@ config = Config()
 
 files = [os.path.join('../data/', f) for f in os.listdir('../data/')]
 
-importanceWeights = range(0, 100, 15)
+importanceWeights = list(range(0, 200, 15)) + [50,55]
 
 def trainModel(meshFile, config):
     if config.name in os.listdir('results/logs/'):
