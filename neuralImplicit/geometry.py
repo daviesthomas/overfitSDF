@@ -16,6 +16,7 @@ import matplotlib.cm as cm
 
 import igl
 import meshplot 
+meshplot.offline()
 
 #constants used for sampling box AND miniball normalization
 BOUNDING_SPHERE_RADIUS = 0.9
@@ -37,12 +38,9 @@ class CubeMarcher():
     def __init__(self):
         pass 
 
-    def march(self, grid, sdf):
-        #TODO: marching cubes not yet implemented in libigl bindings, refactor once it is. Instead we use: https://anaconda.org/ilastik-forge/marching_cubes
-        raise NotImplementedError("marching cubes not yet implemented...")
-        #this doesn't work. Grid has to be reshaped to resxresxresx1 from res*res*resx3. SDF gives value at each grid cell! 
-        v, _, f = marching_cubes.march(grid, 0)
-        mesh = Mesh(V=v, F=f)
+    def march(self, grid, sdf, res):
+        nV,nF = igl.marching_cubes(sdf, grid, res, res, res)
+        mesh = Mesh(V=nV, F=nF)
         return mesh
 
     def createGrid(self, res):
@@ -226,6 +224,9 @@ class Mesh():
                 self.V, self.F = igl.read_triangle_mesh(meshPath)
             else:
                 raise UserWarning("Incorrect usage of Mesh class. Either path to existing mesh (meshPath) must be given, or array of vertices(V) and faces(F).")
+        else:
+            self.V = V
+            self.F = F
 
         if doNormalize:
             self._normalizeMesh()
@@ -243,7 +244,7 @@ class Mesh():
         meshplot.plot(self.V, self.F)
 
     def save(self, fp):
-        igl.writeOBJ(fp,self._V,self._F)
+        igl.write_obj(fp,self.V,self.F)
 
 if __name__ == '__main__':
     def main():

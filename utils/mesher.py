@@ -1,9 +1,11 @@
 # simple utility script for turning models into meshes!
-
-import geometry as gm
+import sys
+sys.path.append('../')
+import neuralImplicit.geometry as gm
 import argparse
 import tensorflow as tf
 import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = "1"
 import numpy as np
 
 def loadModel(modelPath, neuralKey=''):
@@ -32,8 +34,7 @@ def inferSDF(sdfModel, res):
 def marchMesh(S, res):
     cubeMarcher = gm.CubeMarcher()
     inferGrid = cubeMarcher.createGrid(res)
-    cubeMarcher.march(inferGrid,S)
-    marchedMesh = cubeMarcher.getMesh() 
+    marchedMesh = cubeMarcher.march(inferGrid,S, res)
     return marchedMesh
 
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
             S = inferSDF(sdfModel,args.res)
             print("[INFO] Marching cubes...")
             mesh = marchMesh(S, args.res)
-            mp = os.path.join(outputPath,os.path.basename(m) + '.obj')
+            mp = os.path.join(outputPath, os.path.basename(m) + '.obj')
             print("[INFO] Saving mesh to file: ",mp )
             mesh.save(mp)
             print("[INFO] Done.")
